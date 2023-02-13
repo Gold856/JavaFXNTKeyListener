@@ -5,24 +5,18 @@ import java.io.IOException;
 import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.networktables.BooleanPublisher;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableType;
-import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.networktables.NetworkTablesJNI;
-import edu.wpi.first.networktables.PubSubOption;
-import edu.wpi.first.networktables.Publisher;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class ControlWindow extends Application implements EventHandler<KeyEvent> {
@@ -60,20 +54,27 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad9Btn.setMinSize(100, 100);
 		minusBtn.setMinSize(100, 100);
 		plusBtn.setMinSize(100, 100);
-		HBox mainLayout = new HBox(20);
-		VBox column1 = new VBox(20);
-		VBox column2 = new VBox(20);
-		VBox column3 = new VBox(20);
-		VBox column4 = new VBox(20);
-		column1.getChildren().addAll(numpad7Btn, numpad4Btn, numpad1Btn);
-		column2.getChildren().addAll(numpad8Btn, numpad5Btn, numpad2Btn);
-		column3.getChildren().addAll(numpad9Btn, numpad6Btn, numpad3Btn);
-		column4.getChildren().addAll(minusBtn, plusBtn);
-		mainLayout.getChildren().addAll(column1, column2, column3, column4);
-		Scene scene = new Scene(mainLayout, 640, 480);
+		GridPane grid = new GridPane();
+		grid.setHgap(30);
+		grid.setVgap(30);
+		grid.setAlignment(Pos.CENTER);
+		grid.add(numpad1Btn, 0, 2);
+		grid.add(numpad2Btn, 1, 2);
+		grid.add(numpad3Btn, 2, 2);
+		grid.add(numpad4Btn, 0, 1);
+		grid.add(numpad5Btn, 1, 1);
+		grid.add(numpad6Btn, 2, 1);
+		grid.add(numpad7Btn, 0, 0);
+		grid.add(numpad8Btn, 1, 0);
+		grid.add(numpad9Btn, 2, 0);
+		grid.add(minusBtn, 3, 0);
+		grid.add(plusBtn, 3, 1);
+		Scene scene = new Scene(grid);
 		scene.getStylesheets().add("style.css");
 		scene.setOnKeyPressed(this);
 		scene.setOnKeyReleased(this);
+		stage.setMinHeight(560);
+		stage.setMinWidth(690);
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -122,7 +123,7 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 			System.out.println(evt.getCode());
 			switch (evt.getCode()) {
 				case NUMPAD1:
-					numpad1Btn.getStyleClass().remove("activated");
+					numpad1Btn.getStyleClass().removeAll("activated");
 					numpad1Publisher.set(false);
 					break;
 				case NUMPAD2:
