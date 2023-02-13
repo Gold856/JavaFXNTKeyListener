@@ -38,6 +38,8 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 	static BooleanPublisher numpad7Publisher;
 	static BooleanPublisher numpad8Publisher;
 	static BooleanPublisher numpad9Publisher;
+	static BooleanPublisher plusPublisher;
+	static BooleanPublisher minusPublisher;
 	Button minusBtn = new Button("-");
 	Button plusBtn = new Button("+");
 
@@ -89,33 +91,43 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 					break;
 				case NUMPAD2:
 					numpad2Btn.getStyleClass().add("activated");
+					numpad2Publisher.set(true);
 					break;
 				case NUMPAD3:
 					numpad3Btn.getStyleClass().add("activated");
+					numpad3Publisher.set(true);
 					break;
 				case NUMPAD4:
 					numpad4Btn.getStyleClass().add("activated");
+					numpad4Publisher.set(true);
 					break;
 				case NUMPAD5:
 					numpad5Btn.getStyleClass().add("activated");
+					numpad5Publisher.set(true);
 					break;
 				case NUMPAD6:
 					numpad6Btn.getStyleClass().add("activated");
+					numpad6Publisher.set(true);
 					break;
 				case NUMPAD7:
 					numpad7Btn.getStyleClass().add("activated");
+					numpad7Publisher.set(true);
 					break;
 				case NUMPAD8:
 					numpad8Btn.getStyleClass().add("activated");
+					numpad8Publisher.set(true);
 					break;
 				case NUMPAD9:
 					numpad9Btn.getStyleClass().add("activated");
+					numpad9Publisher.set(true);
 					break;
 				case SUBTRACT:
 					minusBtn.getStyleClass().add("activated");
+					minusPublisher.set(true);
 					break;
 				case ADD:
 					plusBtn.getStyleClass().add("activated");
+					plusPublisher.set(true);
 				default:
 					break;
 			}
@@ -128,33 +140,43 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 					break;
 				case NUMPAD2:
 					numpad2Btn.getStyleClass().remove("activated");
+					numpad2Publisher.set(false);
 					break;
 				case NUMPAD3:
 					numpad3Btn.getStyleClass().remove("activated");
+					numpad3Publisher.set(false);
 					break;
 				case NUMPAD4:
 					numpad4Btn.getStyleClass().remove("activated");
+					numpad4Publisher.set(false);
 					break;
 				case NUMPAD5:
 					numpad5Btn.getStyleClass().remove("activated");
+					numpad5Publisher.set(false);
 					break;
 				case NUMPAD6:
 					numpad6Btn.getStyleClass().remove("activated");
+					numpad6Publisher.set(false);
 					break;
 				case NUMPAD7:
 					numpad7Btn.getStyleClass().remove("activated");
+					numpad7Publisher.set(false);
 					break;
 				case NUMPAD8:
 					numpad8Btn.getStyleClass().remove("activated");
+					numpad8Publisher.set(false);
 					break;
 				case NUMPAD9:
 					numpad9Btn.getStyleClass().remove("activated");
+					numpad9Publisher.set(false);
 					break;
 				case SUBTRACT:
 					minusBtn.getStyleClass().remove("activated");
+					minusPublisher.set(false);
 					break;
 				case ADD:
 					plusBtn.getStyleClass().remove("activated");
+					plusPublisher.set(false);
 				default:
 					break;
 			}
@@ -188,6 +210,18 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad7Publisher = table.getBooleanTopic("NUMPAD7").publish();
 		numpad8Publisher = table.getBooleanTopic("NUMPAD8").publish();
 		numpad9Publisher = table.getBooleanTopic("NUMPAD9").publish();
+		plusPublisher = table.getBooleanTopic("PLUS").publish();
+		minusPublisher = table.getBooleanTopic("MINUS").publish();
 		numpad1Publisher.set(false);
+		numpad2Publisher.set(false);
+		numpad3Publisher.set(false);
+		numpad4Publisher.set(false);
+		numpad5Publisher.set(false);
+		numpad6Publisher.set(false);
+		numpad7Publisher.set(false);
+		numpad8Publisher.set(false);
+		numpad9Publisher.set(false);
+		plusPublisher.set(false);
+		minusPublisher.set(false);
 	}
 }
