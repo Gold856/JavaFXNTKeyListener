@@ -29,6 +29,8 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 	Button numpad7Btn = new Button("NUMPAD7");
 	Button numpad8Btn = new Button("NUMPAD8");
 	Button numpad9Btn = new Button("NUMPAD9");
+	Button minusBtn = new Button("-");
+	Button plusBtn = new Button("+");
 	static BooleanPublisher numpad1Publisher;
 	static BooleanPublisher numpad2Publisher;
 	static BooleanPublisher numpad3Publisher;
@@ -38,13 +40,12 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 	static BooleanPublisher numpad7Publisher;
 	static BooleanPublisher numpad8Publisher;
 	static BooleanPublisher numpad9Publisher;
-	static BooleanPublisher plusPublisher;
 	static BooleanPublisher minusPublisher;
-	Button minusBtn = new Button("-");
-	Button plusBtn = new Button("+");
+	static BooleanPublisher plusPublisher;
 
 	@Override
 	public void start(Stage stage) {
+		// Size all the buttons
 		numpad1Btn.setMinSize(100, 100);
 		numpad2Btn.setMinSize(100, 100);
 		numpad3Btn.setMinSize(100, 100);
@@ -56,10 +57,14 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad9Btn.setMinSize(100, 100);
 		minusBtn.setMinSize(100, 100);
 		plusBtn.setMinSize(100, 100);
+		// Create the layout
 		GridPane grid = new GridPane();
+		// Gaps of 30 pixels between buttons
 		grid.setHgap(30);
 		grid.setVgap(30);
+		// Center everything
 		grid.setAlignment(Pos.CENTER);
+		// Add all the buttons
 		grid.add(numpad1Btn, 0, 2);
 		grid.add(numpad2Btn, 1, 2);
 		grid.add(numpad3Btn, 2, 2);
@@ -72,9 +77,12 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		grid.add(minusBtn, 3, 0);
 		grid.add(plusBtn, 3, 1);
 		Scene scene = new Scene(grid);
+		// Styling
 		scene.getStylesheets().add("style.css");
+		// Key events
 		scene.setOnKeyPressed(this);
 		scene.setOnKeyReleased(this);
+		// Lock minimum window size
 		stage.setMinHeight(560);
 		stage.setMinWidth(690);
 		stage.setScene(scene);
@@ -83,6 +91,8 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 
 	@Override
 	public void handle(KeyEvent evt) {
+		// When a key is pressed, change the NetworkTables topic to true and turn the
+		// button lime
 		if (evt.getEventType() == KeyEvent.KEY_PRESSED) {
 			switch (evt.getCode()) {
 				case NUMPAD1:
@@ -131,8 +141,9 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 				default:
 					break;
 			}
+			// When the button is released, remove the button's lime color, and set the
+			// NetworkTables topic to false
 		} else if (evt.getEventType() == KeyEvent.KEY_RELEASED) {
-			System.out.println(evt.getCode());
 			switch (evt.getCode()) {
 				case NUMPAD1:
 					numpad1Btn.getStyleClass().removeAll("activated");
@@ -190,11 +201,15 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		CameraServerJNI.Helper.setExtractOnStaticLoad(false);
 		CombinedRuntimeLoader.loadLibraries(ControlWindow.class, "wpiutiljni", "wpimathjni", "ntcorejni",
 				"cscorejnicvstatic");
-
+		// NetworkTables
 		run();
+		// JavaFX
 		launch();
 	}
 
+	/**
+	 * Start up NetworkTables instance, and prepare topics for each button
+	 */
 	public static void run() {
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
 		inst.startClient4("example client");
@@ -210,8 +225,8 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad7Publisher = table.getBooleanTopic("NUMPAD7").publish();
 		numpad8Publisher = table.getBooleanTopic("NUMPAD8").publish();
 		numpad9Publisher = table.getBooleanTopic("NUMPAD9").publish();
-		plusPublisher = table.getBooleanTopic("PLUS").publish();
 		minusPublisher = table.getBooleanTopic("MINUS").publish();
+		plusPublisher = table.getBooleanTopic("PLUS").publish();
 		numpad1Publisher.set(false);
 		numpad2Publisher.set(false);
 		numpad3Publisher.set(false);
@@ -221,7 +236,7 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad7Publisher.set(false);
 		numpad8Publisher.set(false);
 		numpad9Publisher.set(false);
-		plusPublisher.set(false);
 		minusPublisher.set(false);
+		plusPublisher.set(false);
 	}
 }
