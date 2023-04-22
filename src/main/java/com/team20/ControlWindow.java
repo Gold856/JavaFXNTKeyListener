@@ -20,17 +20,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class ControlWindow extends Application implements EventHandler<KeyEvent> {
-	Button numpad1Btn = new Button("NUMPAD1");
-	Button numpad2Btn = new Button("NUMPAD2");
-	Button numpad3Btn = new Button("NUMPAD3");
-	Button numpad4Btn = new Button("NUMPAD4");
-	Button numpad5Btn = new Button("NUMPAD5");
-	Button numpad6Btn = new Button("NUMPAD6");
-	Button numpad7Btn = new Button("NUMPAD7");
-	Button numpad8Btn = new Button("NUMPAD8");
-	Button numpad9Btn = new Button("NUMPAD9");
-	Button minusBtn = new Button("-");
-	Button plusBtn = new Button("+");
+	Slider xAxisSlider = new Slider(-1, 1, 0);
+	Slider yAxisSlider = new Slider(-1, 1, 0);
+	Slider rotationAxisSlider = new Slider(-1, 1, 0);
 	static BooleanPublisher numpad1Publisher;
 	static BooleanPublisher numpad2Publisher;
 	static BooleanPublisher numpad3Publisher;
@@ -42,6 +34,9 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 	static BooleanPublisher numpad9Publisher;
 	static BooleanPublisher minusPublisher;
 	static BooleanPublisher plusPublisher;
+	DoublePublisher xAxisPublisher;
+	DoublePublisher yAxisPublisher;
+	DoublePublisher rotationAxisPublisher;
 
 	@Override
 	public void start(Stage stage) {
@@ -57,6 +52,24 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad9Btn.setMinSize(100, 100);
 		minusBtn.setMinSize(100, 100);
 		plusBtn.setMinSize(100, 100);
+		xAxisSlider.setBlockIncrement(0.05);
+		yAxisSlider.setBlockIncrement(0.05);
+		rotationAxisSlider.setBlockIncrement(0.05);
+		xAxisSlider.valueProperty().addListener(
+				evt -> {
+					xAxisPublisher.set(xAxisSlider.getValue());
+					NetworkTableInstance.getDefault().flush();
+				});
+		yAxisSlider.valueProperty().addListener(
+				evt -> {
+					yAxisPublisher.set(yAxisSlider.getValue());
+					NetworkTableInstance.getDefault().flush();
+				});
+		rotationAxisSlider.valueProperty().addListener(
+				evt -> {
+					rotationAxisPublisher.set(rotationAxisSlider.getValue());
+					NetworkTableInstance.getDefault().flush();
+				});
 		// Create the layout
 		GridPane grid = new GridPane();
 		// Gaps of 30 pixels between buttons
@@ -76,6 +89,9 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		grid.add(numpad9Btn, 2, 0);
 		grid.add(minusBtn, 3, 0);
 		grid.add(plusBtn, 3, 1);
+		grid.add(xAxisSlider, 0, 3, 3, 1);
+		grid.add(yAxisSlider, 0, 4, 3, 1);
+		grid.add(rotationAxisSlider, 0, 5, 3, 1);
 		Scene scene = new Scene(grid);
 		// Styling
 		scene.getStylesheets().add("style.css");
@@ -230,6 +246,9 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad9Publisher = table.getBooleanTopic("NUMPAD9").publish();
 		minusPublisher = table.getBooleanTopic("MINUS").publish();
 		plusPublisher = table.getBooleanTopic("PLUS").publish();
+		xAxisPublisher = table.getDoubleTopic("xAxis").publish();
+		yAxisPublisher = table.getDoubleTopic("yAxis").publish();
+		rotationAxisPublisher = table.getDoubleTopic("rotationAxis").publish();
 		numpad1Publisher.set(false);
 		numpad2Publisher.set(false);
 		numpad3Publisher.set(false);
@@ -241,5 +260,8 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		numpad9Publisher.set(false);
 		minusPublisher.set(false);
 		plusPublisher.set(false);
+		xAxisPublisher.set(0);
+		yAxisPublisher.set(0);
+		rotationAxisPublisher.set(0);
 	}
 }
