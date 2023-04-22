@@ -138,6 +138,7 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 				case ADD:
 					plusBtn.getStyleClass().add("activated");
 					plusPublisher.set(true);
+					break;
 				default:
 					break;
 			}
@@ -150,44 +151,45 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 					numpad1Publisher.set(false);
 					break;
 				case NUMPAD2:
-					numpad2Btn.getStyleClass().remove("activated");
+					numpad2Btn.getStyleClass().removeAll("activated");
 					numpad2Publisher.set(false);
 					break;
 				case NUMPAD3:
-					numpad3Btn.getStyleClass().remove("activated");
+					numpad3Btn.getStyleClass().removeAll("activated");
 					numpad3Publisher.set(false);
 					break;
 				case NUMPAD4:
-					numpad4Btn.getStyleClass().remove("activated");
+					numpad4Btn.getStyleClass().removeAll("activated");
 					numpad4Publisher.set(false);
 					break;
 				case NUMPAD5:
-					numpad5Btn.getStyleClass().remove("activated");
+					numpad5Btn.getStyleClass().removeAll("activated");
 					numpad5Publisher.set(false);
 					break;
 				case NUMPAD6:
-					numpad6Btn.getStyleClass().remove("activated");
+					numpad6Btn.getStyleClass().removeAll("activated");
 					numpad6Publisher.set(false);
 					break;
 				case NUMPAD7:
-					numpad7Btn.getStyleClass().remove("activated");
+					numpad7Btn.getStyleClass().removeAll("activated");
 					numpad7Publisher.set(false);
 					break;
 				case NUMPAD8:
-					numpad8Btn.getStyleClass().remove("activated");
+					numpad8Btn.getStyleClass().removeAll("activated");
 					numpad8Publisher.set(false);
 					break;
 				case NUMPAD9:
-					numpad9Btn.getStyleClass().remove("activated");
+					numpad9Btn.getStyleClass().removeAll("activated");
 					numpad9Publisher.set(false);
 					break;
 				case SUBTRACT:
-					minusBtn.getStyleClass().remove("activated");
+					minusBtn.getStyleClass().removeAll("activated");
 					minusPublisher.set(false);
 					break;
 				case ADD:
-					plusBtn.getStyleClass().remove("activated");
+					plusBtn.getStyleClass().removeAll("activated");
 					plusPublisher.set(false);
+					break;
 				default:
 					break;
 			}
