@@ -5,6 +5,7 @@ import java.io.IOException;
 import edu.wpi.first.cscore.CameraServerJNI;
 import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTablesJNI;
@@ -15,14 +16,29 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import lc.kra.system.keyboard.GlobalKeyboardHook;
+import lc.kra.system.keyboard.event.GlobalKeyEvent;
+import lc.kra.system.keyboard.event.GlobalKeyListener;
 
 public class ControlWindow extends Application implements EventHandler<KeyEvent> {
-	Slider xAxisSlider = new Slider(-1, 1, 0);
-	Slider yAxisSlider = new Slider(-1, 1, 0);
-	Slider rotationAxisSlider = new Slider(-1, 1, 0);
+	static Button numpad1Btn = new Button("NUMPAD1");
+	static Button numpad2Btn = new Button("NUMPAD2");
+	static Button numpad3Btn = new Button("NUMPAD3");
+	static Button numpad4Btn = new Button("NUMPAD4");
+	static Button numpad5Btn = new Button("NUMPAD5");
+	static Button numpad6Btn = new Button("NUMPAD6");
+	static Button numpad7Btn = new Button("NUMPAD7");
+	static Button numpad8Btn = new Button("NUMPAD8");
+	static Button numpad9Btn = new Button("NUMPAD9");
+	static Button minusBtn = new Button("-");
+	static Button plusBtn = new Button("+");
+	static Slider xAxisSlider = new Slider(-1, 1, 0);
+	static Slider yAxisSlider = new Slider(-1, 1, 0);
+	static Slider rotationAxisSlider = new Slider(-1, 1, 0);
 	static BooleanPublisher numpad1Publisher;
 	static BooleanPublisher numpad2Publisher;
 	static BooleanPublisher numpad3Publisher;
@@ -34,9 +50,9 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 	static BooleanPublisher numpad9Publisher;
 	static BooleanPublisher minusPublisher;
 	static BooleanPublisher plusPublisher;
-	DoublePublisher xAxisPublisher;
-	DoublePublisher yAxisPublisher;
-	DoublePublisher rotationAxisPublisher;
+	static DoublePublisher xAxisPublisher;
+	static DoublePublisher yAxisPublisher;
+	static DoublePublisher rotationAxisPublisher;
 
 	@Override
 	public void start(Stage stage) {
@@ -222,6 +238,20 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 				"cscorejnicvstatic");
 		// NetworkTables
 		run();
+		GlobalKeyboardHook keyboardHook = new GlobalKeyboardHook();
+		keyboardHook.addKeyListener(new GlobalKeyListener() {
+			@Override
+			public void keyPressed(GlobalKeyEvent event) {
+				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_NUMPAD1) {
+					numpad1Btn.getStyleClass().add("activated");
+					numpad1Publisher.set(true);
+				}
+			}
+
+			@Override
+			public void keyReleased(GlobalKeyEvent event) {
+			}
+		});
 		// JavaFX
 		launch();
 	}
