@@ -194,6 +194,7 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 					break;
 			}
 		}
+		NetworkTableInstance.getDefault().flush();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -214,10 +215,10 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 	 */
 	public static void run() {
 		NetworkTableInstance inst = NetworkTableInstance.getDefault();
-		inst.startClient4("example client");
+		inst.startClient4("Keyboard Client");
 		inst.setServer("localhost"); // where TEAM=190, 294, etc, or use inst.setServer("hostname") or similar
 		inst.startDSClient(); // recommended if running on DS computer; this gets the robot IP from the DS
-		NetworkTable table = inst.getTable("Key");
+		NetworkTable table = inst.getTable("SmartDashboard");
 		numpad1Publisher = table.getBooleanTopic("NUMPAD1").publish();
 		numpad2Publisher = table.getBooleanTopic("NUMPAD2").publish();
 		numpad3Publisher = table.getBooleanTopic("NUMPAD3").publish();
