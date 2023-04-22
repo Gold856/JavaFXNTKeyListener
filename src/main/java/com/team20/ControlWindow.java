@@ -12,19 +12,17 @@ import edu.wpi.first.networktables.NetworkTablesJNI;
 import edu.wpi.first.util.CombinedRuntimeLoader;
 import edu.wpi.first.util.WPIUtilJNI;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import lc.kra.system.keyboard.GlobalKeyboardHook;
 import lc.kra.system.keyboard.event.GlobalKeyEvent;
 import lc.kra.system.keyboard.event.GlobalKeyListener;
 
-public class ControlWindow extends Application implements EventHandler<KeyEvent> {
+public class ControlWindow extends Application {
 	static Button numpad1Btn = new Button("NUMPAD1");
 	static Button numpad2Btn = new Button("NUMPAD2");
 	static Button numpad3Btn = new Button("NUMPAD3");
@@ -111,9 +109,6 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		Scene scene = new Scene(grid);
 		// Styling
 		scene.getStylesheets().add("style.css");
-		// Key events
-		scene.setOnKeyPressed(this);
-		scene.setOnKeyReleased(this);
 		// Lock minimum window size
 		stage.setMinHeight(560);
 		stage.setMinWidth(690);
@@ -121,112 +116,24 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		stage.show();
 	}
 
-	@Override
-	public void handle(KeyEvent evt) {
-		// When a key is pressed, change the NetworkTables topic to true and turn the
-		// button lime
-		if (evt.getEventType() == KeyEvent.KEY_PRESSED) {
-			switch (evt.getCode()) {
-				case NUMPAD1:
-					numpad1Btn.getStyleClass().add("activated");
-					numpad1Publisher.set(true);
-					break;
-				case NUMPAD2:
-					numpad2Btn.getStyleClass().add("activated");
-					numpad2Publisher.set(true);
-					break;
-				case NUMPAD3:
-					numpad3Btn.getStyleClass().add("activated");
-					numpad3Publisher.set(true);
-					break;
-				case NUMPAD4:
-					numpad4Btn.getStyleClass().add("activated");
-					numpad4Publisher.set(true);
-					break;
-				case NUMPAD5:
-					numpad5Btn.getStyleClass().add("activated");
-					numpad5Publisher.set(true);
-					break;
-				case NUMPAD6:
-					numpad6Btn.getStyleClass().add("activated");
-					numpad6Publisher.set(true);
-					break;
-				case NUMPAD7:
-					numpad7Btn.getStyleClass().add("activated");
-					numpad7Publisher.set(true);
-					break;
-				case NUMPAD8:
-					numpad8Btn.getStyleClass().add("activated");
-					numpad8Publisher.set(true);
-					break;
-				case NUMPAD9:
-					numpad9Btn.getStyleClass().add("activated");
-					numpad9Publisher.set(true);
-					break;
-				case SUBTRACT:
-					minusBtn.getStyleClass().add("activated");
-					minusPublisher.set(true);
-					break;
-				case ADD:
-					plusBtn.getStyleClass().add("activated");
-					plusPublisher.set(true);
-					break;
-				default:
-					break;
-			}
-			// When the button is released, remove the button's lime color, and set the
-			// NetworkTables topic to false
-		} else if (evt.getEventType() == KeyEvent.KEY_RELEASED) {
-			switch (evt.getCode()) {
-				case NUMPAD1:
-					numpad1Btn.getStyleClass().removeAll("activated");
-					numpad1Publisher.set(false);
-					break;
-				case NUMPAD2:
-					numpad2Btn.getStyleClass().removeAll("activated");
-					numpad2Publisher.set(false);
-					break;
-				case NUMPAD3:
-					numpad3Btn.getStyleClass().removeAll("activated");
-					numpad3Publisher.set(false);
-					break;
-				case NUMPAD4:
-					numpad4Btn.getStyleClass().removeAll("activated");
-					numpad4Publisher.set(false);
-					break;
-				case NUMPAD5:
-					numpad5Btn.getStyleClass().removeAll("activated");
-					numpad5Publisher.set(false);
-					break;
-				case NUMPAD6:
-					numpad6Btn.getStyleClass().removeAll("activated");
-					numpad6Publisher.set(false);
-					break;
-				case NUMPAD7:
-					numpad7Btn.getStyleClass().removeAll("activated");
-					numpad7Publisher.set(false);
-					break;
-				case NUMPAD8:
-					numpad8Btn.getStyleClass().removeAll("activated");
-					numpad8Publisher.set(false);
-					break;
-				case NUMPAD9:
-					numpad9Btn.getStyleClass().removeAll("activated");
-					numpad9Publisher.set(false);
-					break;
-				case SUBTRACT:
-					minusBtn.getStyleClass().removeAll("activated");
-					minusPublisher.set(false);
-					break;
-				case ADD:
-					plusBtn.getStyleClass().removeAll("activated");
-					plusPublisher.set(false);
-					break;
-				default:
-					break;
-			}
+	/**
+	 * When a button(JavaFX or keyboard) is pressed or released, turn the button
+	 * green and
+	 * update Network tables
+	 * 
+	 * @param button          The button to update
+	 * @param buttonPublisher The publisher on NetworkTables
+	 * @param isPressed       If the button is pressed
+	 */
+	public static void broadcastButtonEvent(Button button, BooleanPublisher buttonPublisher, boolean isPressed) {
+		// If the button is pressed, turn the button lime
+		if (isPressed) {
+			button.getStyleClass().add("activated");
+		} else {
+			// If the button is released, remove the button's lime color
+			button.getStyleClass().removeAll("activated");
 		}
-		NetworkTableInstance.getDefault().flush();
+		buttonPublisher.set(isPressed);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -242,14 +149,36 @@ public class ControlWindow extends Application implements EventHandler<KeyEvent>
 		keyboardHook.addKeyListener(new GlobalKeyListener() {
 			@Override
 			public void keyPressed(GlobalKeyEvent event) {
-				if (event.getVirtualKeyCode() == GlobalKeyEvent.VK_NUMPAD1) {
-					numpad1Btn.getStyleClass().add("activated");
-					numpad1Publisher.set(true);
+				switch (event.getVirtualKeyCode()) {
+					case GlobalKeyEvent.VK_NUMPAD1 -> broadcastButtonEvent(numpad1Btn, numpad1Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD2 -> broadcastButtonEvent(numpad2Btn, numpad2Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD3 -> broadcastButtonEvent(numpad3Btn, numpad3Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD4 -> broadcastButtonEvent(numpad4Btn, numpad4Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD5 -> broadcastButtonEvent(numpad5Btn, numpad5Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD6 -> broadcastButtonEvent(numpad6Btn, numpad6Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD7 -> broadcastButtonEvent(numpad7Btn, numpad7Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD8 -> broadcastButtonEvent(numpad8Btn, numpad8Publisher, true);
+					case GlobalKeyEvent.VK_NUMPAD9 -> broadcastButtonEvent(numpad9Btn, numpad9Publisher, true);
+					case GlobalKeyEvent.VK_SUBTRACT -> broadcastButtonEvent(minusBtn, minusPublisher, true);
+					case GlobalKeyEvent.VK_ADD -> broadcastButtonEvent(plusBtn, plusPublisher, true);
 				}
 			}
 
 			@Override
 			public void keyReleased(GlobalKeyEvent event) {
+				switch (event.getVirtualKeyCode()) {
+					case GlobalKeyEvent.VK_NUMPAD1 -> broadcastButtonEvent(numpad1Btn, numpad1Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD2 -> broadcastButtonEvent(numpad2Btn, numpad2Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD3 -> broadcastButtonEvent(numpad3Btn, numpad3Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD4 -> broadcastButtonEvent(numpad4Btn, numpad4Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD5 -> broadcastButtonEvent(numpad5Btn, numpad5Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD6 -> broadcastButtonEvent(numpad6Btn, numpad6Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD7 -> broadcastButtonEvent(numpad7Btn, numpad7Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD8 -> broadcastButtonEvent(numpad8Btn, numpad8Publisher, false);
+					case GlobalKeyEvent.VK_NUMPAD9 -> broadcastButtonEvent(numpad9Btn, numpad9Publisher, false);
+					case GlobalKeyEvent.VK_SUBTRACT -> broadcastButtonEvent(minusBtn, minusPublisher, false);
+					case GlobalKeyEvent.VK_ADD -> broadcastButtonEvent(plusBtn, plusPublisher, false);
+				}
 			}
 		});
 		// JavaFX
